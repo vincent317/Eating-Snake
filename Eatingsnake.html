@@ -1,0 +1,130 @@
+﻿<html>
+<head>
+    <style>
+    </style>
+</head>
+<body>
+    <div align="center">倒计时:&nbsp;<input type="text" value="90" id="miaobiao" />&nbsp;&nbsp;得分:&nbsp;<input type="text" value="0" id="defen" />
+        <script>
+            var i = 90;
+            function countdown() {
+                i--;
+                if (i == 0) {
+                    alert("Time is up. Your score is: " + document.getElementById('defen').value);
+                    setTimeout(location.reload(), 1500);
+                }
+                document.getElementById('miaobiao').value = i;
+                document.getElementById('defen').value = snakelength - 1;
+            }
+        </script>
+    </div><br />
+    <div id="qipan" style="margin:0 auto; width:400px">
+        <canvas id="canvas" width="400" height="300" style="border:2px solid black"></canvas>
+    </div>
+    <script>
+        var flag = 1;
+        var pen = document.getElementById("canvas").getContext('2d');
+        var position = new Array();
+        position[0] = 60;
+        position[1] = 60;
+        var count = 0;
+        var direction = "right";
+        var snakelength = 1;
+        document.onkeydown = function (e) {
+            if (e.keyCode == 39&&direction!="right"&&direction!="left") 
+                direction = "right";
+            else if (e.keyCode == 37 && direction != "right" && direction != "left") 
+                direction = "left";
+            else if (e.keyCode == 38 && direction != "up" && direction != "down") 
+                direction = "up";
+            else if (e.keyCode == 40 && direction != "up" && direction != "down") 
+                direction = "down";
+        }
+        var q2;
+        function move() { 
+            if (position[count - 2] == -20 || position[count - 2] == 400 || position[count - 1] == -20 || position[count - 1] == 300) {
+                alert("Game Over. Your score is: " + document.getElementById('defen').value);
+                setTimeout(location.reload(), 1500);
+            }
+            if (snakelength > 3)
+                for (var i = count - (snakelength - 1) * 2; i < count - 5; i += 2)
+                    if (position[i] == position[count] && position[i + 1] == position[count + 1]) {
+                        alert("Game Over. Your score is: " + document.getElementById('defen').value);
+                        setTimeout(location.reload(), 1500);
+                    }
+            if (direction == "right") {
+                pen.fillStyle = "red";
+                pen.fillRect(position[count], position[count + 1], 20, 20);
+                pen.fillStyle = "blue";
+                if (snakelength > 1) 
+                    for (var i = count - snakelength * 2; i < count; i += 2)
+                        pen.fillRect(position[i], position[i + 1], 20, 20);
+                count += 2;
+                position[count] = position[count - 2] + 20;
+                position[count + 1] = position[count - 1];
+                pen.clearRect(position[count - snakelength * 2 - 2], position[count - snakelength * 2 - 1], 20, 20);
+            }
+            else if (direction == "left") {
+                pen.fillStyle = "red";
+                pen.fillRect(position[count], position[count + 1], 20, 20);
+                pen.fillStyle = "blue";
+                if (snakelength > 1) 
+                    for (var i = count - snakelength * 2; i < count; i += 2)
+                        pen.fillRect(position[i], position[i + 1], 20, 20);
+                count += 2;
+                position[count] = position[count - 2] - 20;
+                position[count + 1] = position[count - 1];
+                pen.clearRect(position[count - snakelength * 2 - 2], position[count - snakelength * 2 - 1], 20, 20);
+            }
+            else if (direction == "up") {
+                pen.fillStyle = "red";
+                pen.fillRect(position[count], position[count + 1], 20, 20);
+                pen.fillStyle = "blue";
+                if (snakelength > 1) 
+                    for (var i = count - snakelength * 2; i < count; i += 2)
+                        pen.fillRect(position[i], position[i + 1], 20, 20);
+                count += 2;
+                position[count] = position[count - 2];
+                position[count + 1] = position[count - 1] - 20;
+                pen.clearRect(position[count - snakelength * 2 - 2], position[count - snakelength * 2 - 1], 20, 20);
+            }
+            else if (direction == "down") {
+                pen.fillStyle = "red";
+                pen.fillRect(position[count], position[count + 1], 20, 20);
+                pen.fillStyle = "blue";
+                if (snakelength > 1) 
+                    for (var i = count - snakelength * 2; i < count; i += 2)
+                        pen.fillRect(position[i], position[i + 1], 20, 20);
+                count += 2;
+                position[count] = position[count - 2];
+                position[count + 1] = position[count - 1]+20; 
+                pen.clearRect(position[count - snakelength * 2 - 2], position[count - snakelength * 2 - 1], 20, 20);
+            }
+            if(position[count] == horirand && position[count + 1] == vertrand) 
+                snakelength++;
+        }
+        
+        function init() {
+            food();
+            setInterval(food, 3500);
+            setInterval(countdown, 1000);
+            setInterval(move, 300);
+        }
+        var horirand = 0;
+        var vertrand = 0;
+        var temph = 0;
+        var tempv = 0;
+        function food() {
+            horirand = 20*Math.floor(Math.random() * 20);
+            vertrand = 20*Math.floor(Math.random() * 15);
+            pen.clearRect(temph, tempv, 20, 20);
+            pen.fillStyle = "yellow";
+            pen.fillRect(horirand, vertrand, 20, 20);
+            temph = horirand;
+            tempv = vertrand;
+        }
+    </script>
+    <br />
+    <div align="center"><input type="button" value="开始游戏" onclick="init()" />&nbsp; &nbsp; <input type="button" value="重新开始" onclick="location.reload()" /></div>
+</body>
+</html>
